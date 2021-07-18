@@ -1,0 +1,7 @@
+.el-scrollbar__wrap {
+    /*overflow: scroll;*/
+    overflow-x: hidden;
+    /*overflow-y: hidden;*/
+
+
+}

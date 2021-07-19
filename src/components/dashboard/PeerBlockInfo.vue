@@ -2,37 +2,59 @@
   <div class="base-info">
     <el-row :gutter="20">
       <el-col :span="12" class="peer-info">
-        <el-row type="flex" justify="center" class="bg-light"><p>peerName</p></el-row>
-        <el-row v-for="peer in peers" :key="peer" type="flex" justify="center" class="bg-dark" style="height: 66px">
-          <p>{{peer.server_hostname}}</p>
-        </el-row>
+        <div class="bg-dark">
+          <el-row type="flex" justify="center" class="bg-light"><p>peerName</p></el-row>
+          <el-row type="flex" justify="center" class="bg-dark" style="height: 66px">
+            <p>peer0.org1.example.com</p>
+          </el-row>
+          <el-row type="flex" justify="center" class="bg-dark" style="height: 66px">
+            <p>peer0.org1.example.com</p>
+          </el-row>
+          <el-row type="flex" justify="center" class="bg-dark" style="height: 67px">
+            <p>peer0.org1.example.com</p>
+          </el-row>
+          <el-row type="flex" justify="center" class="bg-dark" style="height: 67px">
+            <p>peer0.org1.example.com</p>
+          </el-row>
+        </div>
       </el-col>
       <el-col :span="12">
-        <el-tabs type="border-card" class="tx-info">
-          <el-tab-pane label="BLOCK/HOUR"><tx-chart/></el-tab-pane>
-          <el-tab-pane label="配置管理">配置管理</el-tab-pane>
-          <el-tab-pane label="角色管理">角色管理</el-tab-pane>
-          <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
-        </el-tabs>
+        <div class="bg-dark">
+          <el-tabs type="border-card" v-model="activeName" class="tx-info" @tab-click="handleClick">
+            <el-tab-pane label="BLOCK/HOUR" name="hour_tab">
+              <div id="hour_tab" style="width: 540px;height: 246px"></div>
+            </el-tab-pane>
+            <el-tab-pane label="BLOCK/MIN" name="min_tab" >
+              <div id="min_tab" style="width:540px;height: 246px"></div>
+            </el-tab-pane>
+            <el-tab-pane label="BLOCK/DAY" name="day_tab" >
+              <div id="day_tab" style="width: 540px;height: 246px"></div>
+            </el-tab-pane>
+            <el-tab-pane label="BLOCK/MONTH" name="month_tab">
+              <div id="month_tab" style="width: 540px;height: 246px"></div>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-import txChart from '@/components/dashboard/TxChart'
+// import txChart from '@/components/dashboard/TxChart'
 export default {
   name: 'MainContentTwo',
   components: {
-    'txChart': txChart
+    // 'txChart': txChart
   },
   data () {
     return {
-      peers: []
+      activeName: 'hour_tab'
     }
   },
   mounted () {
     var self = this
+    this.drawLine('hour_tab')
     this.$axios({
       method: 'GET',
       url: this.$global.baseUrl + 'peer/getPeers',
@@ -45,8 +67,31 @@ export default {
     })
   },
   methods: {
-    scrollMore () {
-      console.log('scroll')
+    drawLine (eleid) {
+      let chart = this.$echarts.init(document.getElementById(eleid))
+      chart.setOption({
+        tooltip: {},
+        xAxis: {
+          data: ['201902', '201903', '201904', '201906', '201906', '201907']
+        },
+        yAxis: {},
+        series: [{
+          name: '销量',
+          type: 'line',
+          data: [5, 20, 36, 10, 10, 20]
+        }]
+      })
+    },
+    handleClick (tab, e) {
+      if (tab.name === 'hour_tab') {
+        this.drawLine('hour_tab')
+      } else if (tab.name === 'min_tab') {
+        this.drawLine('min_tab')
+      } else if (tab.name === 'day_tab') {
+        this.drawLine('day_tab')
+      } else {
+        this.drawLine('month_tab')
+      }
     }
   }
 }

@@ -1,34 +1,49 @@
 <template>
     <div  class="block-tx-info">
         <el-row :gutter="20">
-            <el-col :span="12" style="height: 350px">
-                <div class="block-info" style="height: 350px">
-                    <el-scrollbar  style="height: 100%" :native="true" class="el-scrollbar__wrap">
-                        <div class="block-info-card" v-for="block in blockInfo" :key="block">
-                            <div class="card-header">
-                                <span style="margin-left: 10px;">Block{{block.blocknum}}</span>
-                                <el-button style="float: right; padding: 3px 0;font-size: larger;margin-right: 20px" type="text">
-                                    <i class="el-icon-pie-chart"></i>
-                                </el-button>
-                            </div>
-                            <div class="block-divide-line"></div>
-                            <div style="font-size: smaller;margin-left: 10px;margin-top: 10px">
-                                <div>
-                                    <span style="font-weight: bold">Channel Name:</span><span>{{block.channelname}}</span>
-                                </div>
-                                <div>
-                                    <span style="font-weight: bold">DataHash: </span><span>{{block.datahash}}</span>
-                                </div>
-                                <div>
-                                    <span style="font-weight: bold">Number of Tx:</span><span> {{block.txcount}}</span>
-                                </div>
-                                <div class="timestamp-tag">
-                                    <el-tag type='' style="background-color: #5E548F;margin-bottom: 20px;margin-top: 10px">
-                                        {{block.createdt}}
-                                    </el-tag>
-                                </div>
-                            </div>
-                        </div>
+            <el-col :span="12"  style="height: 340px">
+                <div class="block-info"  style="height: 340px">
+                    <el-scrollbar style="width: 100%; height: 100%" tag="ul">
+                      <div style="margin: 10px">
+                        <el-card style="width: 90%;">
+                          <p>Block4</p>
+                          <p>ChannelName:mychannel</p>
+                          <p>ChannelName:mychannel</p>
+                          <p>ChannelName:mychannel</p>
+                        </el-card>
+                      </div>
+                      <div style="margin: 10px">
+                        <el-card style="width: 90%">
+                          <p>Block4</p>
+                          <p>ChannelName:mychannel</p>
+                          <p>ChannelName:mychannel</p>
+                          <p>ChannelName:mychannel</p>
+                        </el-card>
+                      </div>
+                      <div style="margin: 10px">
+                        <el-card style="width: 90%">
+                          <p>Block4</p>
+                          <p>ChannelName:mychannel</p>
+                          <p>ChannelName:mychannel</p>
+                          <p>ChannelName:mychannel</p>
+                        </el-card>
+                      </div>
+                      <div style="margin: 10px">
+                        <el-card style="width: 90%">
+                          <p>Block4</p>
+                          <p>ChannelName:mychannel</p>
+                          <p>ChannelName:mychannel</p>
+                          <p>ChannelName:mychannel</p>
+                        </el-card>
+                      </div>
+                      <div style="margin: 10px">
+                        <el-card style="width: 90%">
+                          <p>Block4</p>
+                          <p>ChannelName:mychannel</p>
+                          <p>ChannelName:mychannel</p>
+                          <p>ChannelName:mychannel</p>
+                        </el-card>
+                      </div>
                     </el-scrollbar>
                 </div>
             </el-col>
@@ -108,5 +123,11 @@ export default {
   }
   .timestamp-tag{
       margin-bottom: 10px;
+  }
+  /*div el-card{*/
+  /*  margin-bottom: 20px;*/
+  /*}*/
+  el-scrollbar div{
+    margin: 10px;
   }
 </style>

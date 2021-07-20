@@ -2,8 +2,8 @@
   <div class="peer-block-info">
     <el-row :gutter="20">
       <el-col :span="12" class="peer-info">
-        <el-row type="flex" justify="center" class="bg-light"><p>peerName</p></el-row>
-        <el-row type="flex" justify="center" style="height: 66px" v-for="peer in peers" :key="peer.ServerHostName">
+        <el-row  type="flex" justify="center" class="bg-light"><p>peerName</p></el-row>
+        <el-row  type="flex" justify="center" style="height: 66px" v-for="peer in peers" :key="peer.ServerHostName">
           <p>{{ peer.ServerHostName }}</p>
         </el-row>
       </el-col>
@@ -39,24 +39,43 @@ export default {
   data () {
     return {
       activeName: 'hour_tab',
-      peers: []
+      peers: [],
+      timer: ''
     }
   },
+  watch () {
+
+  },
   mounted () {
-    var self = this
     this.drawLine('hour_tab')
-    this.$axios({
-      method: 'GET',
-      url: this.$global.baseUrl + 'base/peers',
-      headers: {
-        'Accept': '*/*',
-        'Content-Type': 'application/json'
-      }
-    }).then(function (response) {
-      self.peers = response.data
-    })
+    this.getData()
+    this.timer = setInterval(this.getData, 1000)
+    // this.getData()
+    // this.$axios({
+    //   method: 'GET',
+    //   url: this.$global.baseUrl + 'base/peers',
+    //   headers: {
+    //     'Accept': '*/*',
+    //     'Content-Type': 'application/json'
+    //   }
+    // }).then(function (response) {
+    //   self.peers = response.data
+    // })
   },
   methods: {
+    getData () {
+      var self = this
+      this.$axios({
+        method: 'GET',
+        url: this.$global.baseUrl + 'base/peers',
+        headers: {
+          'Accept': '*/*',
+          'Content-Type': 'application/json'
+        }
+      }).then(function (response) {
+        self.peers = response.data
+      })
+    },
     drawLine (eleid) {
       let chart = this.$echarts.init(document.getElementById(eleid))
       chart.setOption({

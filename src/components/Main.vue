@@ -1,12 +1,20 @@
 <template>
     <div id="Main">
         <el-menu :default-active="$route.path" router class="el-menu-demo" mode="horizontal" @select="handleSelect" @close="handleClose">
-            <el-menu-item v-for="(item,i) in navList" :key="i" :index="item.name">
-                <template slot="title">
-                    <i class="el-icon-s-platform"></i>
-                    <span> {{ item.navItem }}</span>
-                </template>
-            </el-menu-item>
+          <el-menu-item v-for="(item,i) in navList" :key="i" :index="item.name">
+              <template slot="title">
+                  <i class="el-icon-s-platform"></i>
+                  <span> {{ item.navItem }}</span>
+              </template>
+          </el-menu-item>
+          <el-select v-model="defaultchannel.ChannelName" placeholder="请选择">
+            <el-option
+              v-for="item in channels"
+              :key="item.ChannelName"
+              :label="item.ChannelName"
+              :value="item.ChannelGenesisHash">
+            </el-option>
+          </el-select>
         </el-menu>
         <router-view></router-view>
     </div>
@@ -24,8 +32,24 @@ export default {
         {name: '/main/transactions', navItem: 'TRANSACTIONS'},
         {name: '/main/chaincodes', navItem: 'CHAINCODES'},
         {name: '/main/channels', navItem: 'CHANNELS'}
-      ]
+      ],
+      channels: [],
+      defaultchannel: {}
     }
+  },
+  mounted () {
+    var self = this
+    this.$axios({
+      method: 'GET',
+      url: this.$global.baseUrl + 'base/infos',
+      headers: {
+        'Accept': '*/*',
+        'Content-Type': 'application/json'
+      }
+    }).then(function (response) {
+      self.channels = response.data.chls
+      self.defaultchannel = response.data.defaultchannel
+    })
   },
   methods: {
     handleSelect (key, keyPath) {

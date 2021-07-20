@@ -37,25 +37,32 @@ export default {
       nodesCount: 0,
       blocksCount: 0,
       txCount: 0,
-      chaincodeCount: 0
+      chaincodeCount: 0,
+      timer: ''
     }
   },
   mounted () {
-    const self = this
-    this.$axios({
-      method: 'GET',
-      url: this.$global.baseUrl + 'base/infos',
-      headers: {
-        'Accept': '*/*',
-        'Content-Type': 'application/json'
-      }
-    }).then(function (response) {
-      console.log(response)
-      self.nodesCount = response.data.peers.length
-      self.blocksCount = response.data.blkCount
-      self.txCount = response.data.txCount
-      self.chaincodeCount = response.data.ccs
-    })
+    this.getData()
+    this.timer = setInterval(this.getData, 1000)
+  },
+  methods: {
+    getData () {
+      const self = this
+      this.$axios({
+        method: 'GET',
+        url: this.$global.baseUrl + 'base/infos',
+        headers: {
+          'Accept': '*/*',
+          'Content-Type': 'application/json'
+        }
+      }).then(function (response) {
+        console.log(response)
+        self.nodesCount = response.data.peers.length
+        self.blocksCount = response.data.blkCount
+        self.txCount = response.data.txCount
+        self.chaincodeCount = response.data.ccs
+      })
+    }
   }
 }
 </script>

@@ -46,6 +46,6 @@ export default {
     right: 0;
   }
   .header .el-menu-demo{
-    padding-right: 0px!important;
+    padding-right: 100px!important;
   }
 </style>

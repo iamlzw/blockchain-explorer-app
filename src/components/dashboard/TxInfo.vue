@@ -5,7 +5,7 @@
                 <div class="block-info"  style="height: 340px">
                     <el-scrollbar style="width: 100%; height: 100%" tag="ul">
                       <div style="margin: 10px" v-for="blk in blockInfo" :key="blk.BlockNum">
-                        <el-card style="width: 90%;">
+                        <el-card style="width: 90%;" class="">
                           <p>Block {{blk.BlockNum}}</p>
                           <p>ChannelName:{{blk.ChannelName}}</p>
                           <p>DataHash:{{ blk.DataHash }}</p>
@@ -37,22 +37,26 @@ export default {
   },
   data () {
     return {
-      blockInfo: []
+      blockInfo: [],
+      timer: ''
     }
   },
   mounted () {
-    const self = this
-    let param = new URLSearchParams()
-    this.$axios({
-      url: this.$global.baseUrl + 'base/infos',
-      method: 'GET',
-      data: param
-    }).then(function (response) {
-      console.log(response)
-      self.blockInfo = response.data.blkActivity
-    })
+    this.getData()
+    this.timer = setInterval(this.getData, 1000)
+  },
+  methods: {
+    getData () {
+      var self = this
+      this.$axios({
+        url: this.$global.baseUrl + 'base/infos',
+        method: 'GET'
+      }).then(function (response) {
+        console.log(response)
+        self.blockInfo = response.data.blkActivity
+      })
+    }
   }
-
 }
 </script>
 

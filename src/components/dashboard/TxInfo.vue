@@ -4,44 +4,13 @@
             <el-col :span="12"  style="height: 340px">
                 <div class="block-info"  style="height: 340px">
                     <el-scrollbar style="width: 100%; height: 100%" tag="ul">
-                      <div style="margin: 10px">
+                      <div style="margin: 10px" v-for="blk in blockInfo" :key="blk.BlockNum">
                         <el-card style="width: 90%;">
-                          <p>Block4</p>
-                          <p>ChannelName:mychannel</p>
-                          <p>ChannelName:mychannel</p>
-                          <p>ChannelName:mychannel</p>
-                        </el-card>
-                      </div>
-                      <div style="margin: 10px">
-                        <el-card style="width: 90%">
-                          <p>Block4</p>
-                          <p>ChannelName:mychannel</p>
-                          <p>ChannelName:mychannel</p>
-                          <p>ChannelName:mychannel</p>
-                        </el-card>
-                      </div>
-                      <div style="margin: 10px">
-                        <el-card style="width: 90%">
-                          <p>Block4</p>
-                          <p>ChannelName:mychannel</p>
-                          <p>ChannelName:mychannel</p>
-                          <p>ChannelName:mychannel</p>
-                        </el-card>
-                      </div>
-                      <div style="margin: 10px">
-                        <el-card style="width: 90%">
-                          <p>Block4</p>
-                          <p>ChannelName:mychannel</p>
-                          <p>ChannelName:mychannel</p>
-                          <p>ChannelName:mychannel</p>
-                        </el-card>
-                      </div>
-                      <div style="margin: 10px">
-                        <el-card style="width: 90%">
-                          <p>Block4</p>
-                          <p>ChannelName:mychannel</p>
-                          <p>ChannelName:mychannel</p>
-                          <p>ChannelName:mychannel</p>
+                          <p>Block {{blk.BlockNum}}</p>
+                          <p>ChannelName:{{blk.ChannelName}}</p>
+                          <p>DataHash:{{ blk.DataHash }}</p>
+                          <p>TxCount:{{ blk.TxCount }}</p>
+                          <p>TimeStamp:{{blk.CreateAt}}</p>
                         </el-card>
                       </div>
                     </el-scrollbar>
@@ -74,14 +43,13 @@ export default {
   mounted () {
     const self = this
     let param = new URLSearchParams()
-    param.append('channelGenesisHash', '15ce44f6d0e4dc8b8be09def44f0dacd054e7909b9be514ac60a34a8950a98a2')
     this.$axios({
-      url: this.$global.baseUrl + 'main/getBlockActivityList',
-      method: 'POST',
+      url: this.$global.baseUrl + 'base/infos',
+      method: 'GET',
       data: param
     }).then(function (response) {
       console.log(response)
-      self.blockInfo = response.data
+      self.blockInfo = response.data.blkActivity
     })
   }
 
@@ -129,5 +97,9 @@ export default {
   /*}*/
   el-scrollbar div{
     margin: 10px;
+  }
+  .bg-dark{
+    background-color: ghostwhite;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.12),0 0 6px 0 rgba(0,0,0,.04);
   }
 </style>

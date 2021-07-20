@@ -28,25 +28,6 @@ export default {
             name: '',
             type: 'pie',
             radius: ['50%', '70%'],
-            // avoidLabelOverlap: false,
-            // label: {
-            //   normal: {
-            //     show: false,
-            //     position: 'center'
-            //   },
-            //   emphasis: {
-            //     show: true,
-            //     textStyle: {
-            //       fontSize: '30',
-            //       fontWeight: 'bold'
-            //     }
-            //   }
-            // },
-            // labelLine: {
-            //   normal: {
-            //     show: false
-            //   }
-            // },
             data: [
               {value: 1048, name: 'OrdererMSP'},
               {value: 735, name: 'Org1MSP'},

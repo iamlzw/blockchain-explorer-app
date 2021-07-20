@@ -1,22 +1,11 @@
 <template>
-  <div class="base-info">
+  <div class="peer-block-info">
     <el-row :gutter="20">
       <el-col :span="12" class="peer-info">
-        <div class="bg-dark">
-          <el-row type="flex" justify="center" class="bg-light"><p>peerName</p></el-row>
-          <el-row type="flex" justify="center" class="bg-dark" style="height: 66px">
-            <p>peer0.org1.example.com</p>
-          </el-row>
-          <el-row type="flex" justify="center" class="bg-dark" style="height: 66px">
-            <p>peer0.org1.example.com</p>
-          </el-row>
-          <el-row type="flex" justify="center" class="bg-dark" style="height: 67px">
-            <p>peer0.org1.example.com</p>
-          </el-row>
-          <el-row type="flex" justify="center" class="bg-dark" style="height: 67px">
-            <p>peer0.org1.example.com</p>
-          </el-row>
-        </div>
+        <el-row type="flex" justify="center" class="bg-light"><p>peerName</p></el-row>
+        <el-row type="flex" justify="center" style="height: 66px" v-for="peer in peers" :key="peer.ServerHostName">
+          <p>{{ peer.ServerHostName }}</p>
+        </el-row>
       </el-col>
       <el-col :span="12">
         <div class="bg-dark">
@@ -49,7 +38,8 @@ export default {
   },
   data () {
     return {
-      activeName: 'hour_tab'
+      activeName: 'hour_tab',
+      peers: []
     }
   },
   mounted () {
@@ -57,7 +47,7 @@ export default {
     this.drawLine('hour_tab')
     this.$axios({
       method: 'GET',
-      url: this.$global.baseUrl + 'peer/getPeers',
+      url: this.$global.baseUrl + 'base/peers',
       headers: {
         'Accept': '*/*',
         'Content-Type': 'application/json'
@@ -104,7 +94,7 @@ export default {
   }
   .bg-dark{
     background-color: ghostwhite;
-    box-shadow: 0 2px 4px 0 rgba(0,0,0,.12),0 0 6px 0 rgba(0,0,0,.04);
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.12),0 0 6px 0 rgba(0,0,0,.04);
   }
   .bg-light{
     background-color: white;

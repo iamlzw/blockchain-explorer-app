@@ -4,25 +4,25 @@
       <el-col :span="6">
         <div class="grid-content bg-purple-dark">
           <h1>区块数量</h1>
-          <h1>1000000</h1>
+          <h1>{{blocksCount}}</h1>
         </div>
       </el-col>
       <el-col :span="6">
         <div class="grid-content bg-purple-dark">
           <h1>交易数量</h1>
-          <h1>1000000</h1>
+          <h1>{{txCount}}</h1>
         </div>
       </el-col>
       <el-col :span="6">
         <div class="grid-content bg-purple-dark">
           <h1>节点数量</h1>
-          <h1>4</h1>
+          <h1>{{nodesCount}}</h1>
         </div>
       </el-col>
       <el-col :span="6">
         <div class="grid-content bg-purple-dark">
           <h1>链码数量</h1>
-          <h1>1</h1>
+          <h1>{{chaincodeCount}}</h1>
         </div>
       </el-col>
     </el-row>
@@ -51,10 +51,10 @@ export default {
       }
     }).then(function (response) {
       console.log(response)
-      self.nodesCount = response.data.nodesCount
-      self.blocksCount = response.data.blocksCount
+      self.nodesCount = response.data.peers.length
+      self.blocksCount = response.data.blkCount
       self.txCount = response.data.txCount
-      self.chaincodeCount = response.data.chaincodeCount
+      self.chaincodeCount = response.data.ccs
     })
   }
 }

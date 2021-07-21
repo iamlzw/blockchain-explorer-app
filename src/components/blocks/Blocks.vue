@@ -228,7 +228,7 @@ export default {
           'Content-Type': 'application/json'
         }
       }).then(function (response) {
-        // console.log(response)
+        console.log(response)
         self.OrgList = response.data
         // self.curChlHash = response.data.defaultchannel.ChannelGenesisHash
       })

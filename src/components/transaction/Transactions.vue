@@ -7,7 +7,7 @@
                     <span class="demonstration">From</span>
                     <el-date-picker
                             style="width: 300px;margin-left: 10px;margin-right: 10px"
-                            v-model="from"
+                            v-model="value2"
                             type="datetime"
                             placeholder="选择日期时间">
                     </el-date-picker>
@@ -16,18 +16,18 @@
                     <span class="demonstration">To</span>
                     <el-date-picker
                             style="width: 300px;margin-left: 10px;margin-right: 10px"
-                            v-model="to"
+                            v-model="value3"
                             type="datetime"
                             placeholder="选择日期时间"
                             size="large">
                     </el-date-picker>
                 </div>
-                <el-select v-model="value" multiple collapse-tags placeholder="请选择" class="tx-filter-select">
+                <el-select v-model="value" multiple collapse-tags placeholder="请选择" class="tx-filter-select" @change="getorgparam">
                     <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            v-for="item in OrgList"
+                            :key="item.MSPId"
+                            :label="item.MSPId"
+                            :value="item.MSPId">
                     </el-option>
                 </el-select>
                 <el-button type="success" class="tx-filter-search" @click="searchTxInfos">Search</el-button>
@@ -39,39 +39,41 @@
                 <el-table
                         :data="tableData"
                         style="width: 100%"
+                        :row-style="{height: '10'}"
+                        :cell-style="{padding: '0'}"
                         stripe="true"
                         :default-sort = "{prop: 'creator', order: ''}">
                     <el-table-column
-                            prop="creator_msp_id"
+                            prop="CreatorMspId"
                             label="Creator"
                             sortable>
                     </el-table-column>
                     <el-table-column
-                            prop="channelName"
+                            prop="ChannelName"
                             label="Channel Name">
                     </el-table-column>
                     <el-table-column
-                            prop="txhash"
+                            prop="TxHash"
                             label="TxId">
                         <template slot-scope="scope">
                             <el-popover trigger="hover" placement="top">
-                                <p>{{scope.row.txhash}}</p>
+                                <p>{{scope.row.TxHash}}</p>
                                 <div slot="reference" class="name-wrapper">
-                                    <span>{{scope.row.txhash.substr(0,6)}}...</span>
+                                    <span>{{scope.row.TxHash.substr(0,6)}}...</span>
                                 </div>
                             </el-popover>
                         </template>
                     </el-table-column>
                     <el-table-column
-                            prop="type"
+                            prop="Type"
                             label="Type">
                     </el-table-column>
                     <el-table-column
-                            prop="chaincode_id"
+                            prop="ChaincodeId"
                             label="ChainCode">
                     </el-table-column>
                     <el-table-column
-                            prop="createdt"
+                            prop="CreateAt"
                             label="TimeStamp">
                     </el-table-column>
                 </el-table>
@@ -100,18 +102,21 @@ export default {
     return {
       value1: defaultTime,
       value: '',
+      value2: '',
+      value3: '',
       from: '',
+      orgparam: '',
       to: '',
       tableData: [],
-      options: [
-        {key: '1', label: '', value: 'OrdererMSP'},
-        {key: '3', label: '', value: 'Org2MSP'},
-        {key: '2', label: '', value: 'Org1MSP'}],
       dialogtxInfoVisible: false,
+      OrgList: [],
       currentPage: 1,
       totalSize: 0,
       pageSize: 10
     }
+  },
+  mounted () {
+    this.getOrgList()
   },
   methods: {
     dateToMs (date) {
@@ -121,25 +126,23 @@ export default {
     searchTxInfos () {
       const self = this
       let param = new URLSearchParams()
-      param.append('channelGenesisHash', '15ce44f6d0e4dc8b8be09def44f0dacd054e7909b9be514ac60a34a8950a98a2')
-      param.append('txNum', '')
-      param.append('from', this.dateToMs(this.from))
-      param.append('to', this.dateToMs(this.to))
-      param.append('orgs', this.value)
+      let hash = this.$parent.channel
+      param.append('channelGenesisHash', hash)
+      param.append('blockNum', '')
+      param.append('from', this.dateToMs(this.value2))
+      param.append('to', this.dateToMs(this.value3))
+      param.append('orgs', this.orgparam)
       param.append('current', this.currentPage)
       param.append('pageSize', this.pageSize)
-      param.append('blockNum', 0)
-      param.append('txid', 0)
       console.log(param.toString())
-      console.log(this.from)
       this.$axios({
         method: 'POST',
-        url: this.$global.baseUrl + '/tx/getTxList',
+        url: this.$global.baseUrl + 'tx/txlist',
         data: param
       }).then(function (response) {
         console.log(response)
-        self.tableData = response.data.txInfo
-        self.totalSize = response.data.txInfo.length
+        self.tableData = response.data
+        self.totalSize = response.data.length
       })
     },
     handleCurrentChange (val) {
@@ -160,6 +163,26 @@ export default {
       self.from = ''
       self.to = ''
       self.value = ''
+    },
+    getOrgList () {
+      const self = this
+      let hash = this.$parent.channel
+      this.$axios({
+        method: 'GET',
+        url: this.$global.baseUrl + 'base/peers?channelGenesisHash=' + hash,
+        headers: {
+          'Accept': '*/*',
+          'Content-Type': 'application/json'
+        }
+      }).then(function (response) {
+        // console.log(response)
+        self.OrgList = response.data
+        // self.curChlHash = response.data.defaultchannel.ChannelGenesisHash
+      })
+    },
+    getorgparam (data) {
+      this.orgparam = data
+      console.log(this.orgparam)
     }
   }
 }
@@ -174,7 +197,7 @@ export default {
         margin-top: 20px;
         min-width: calc(100vh - 400px);
         box-shadow: 0 2px 4px 0 rgba(0,0,0,.12),0 0 6px 0 rgba(0,0,0,.04);
-        /*position: relative;*/
+        position: relative;
         /*display: flex;*/
     }
     .tx-filter{

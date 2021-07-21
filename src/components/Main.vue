@@ -7,7 +7,7 @@
                   <span> {{ item.navItem }}</span>
               </template>
           </el-menu-item>
-          <el-select v-model="defaultchannel.ChannelName" placeholder="请选择">
+          <el-select value-key="ChannelName" v-model="defaultchannel.ChannelName" placeholder="请选择" @change="onchange">
             <el-option
               v-for="item in channels"
               :key="item.ChannelName"
@@ -16,7 +16,7 @@
             </el-option>
           </el-select>
         </el-menu>
-        <router-view></router-view>
+        <router-view :channel="channel"></router-view>
     </div>
 </template>
 
@@ -34,9 +34,13 @@ export default {
         {name: '/main/channels', navItem: 'CHANNELS'}
       ],
       channels: [],
-      defaultchannel: {}
+      defaultchannel: {},
+      // curChannel: '',
+      channelName: '',
+      channel: ''
     }
   },
+
   mounted () {
     var self = this
     this.$axios({
@@ -49,6 +53,7 @@ export default {
     }).then(function (response) {
       self.channels = response.data.chls
       self.defaultchannel = response.data.defaultchannel
+      self.channel = response.data.defaultchannel.ChannelGenesisHash
     })
   },
   methods: {
@@ -60,6 +65,9 @@ export default {
     },
     handleClose (key, keyPath) {
       console.log(key, keyPath)
+    },
+    onchange (data) {
+      this.channel = data
     }
   }
 }

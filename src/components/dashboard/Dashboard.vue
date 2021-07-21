@@ -89,15 +89,12 @@
 
 <script>
 // import BaseInfo from '@/components/dashboard/BaseInfo'
-import PeerBlockInfo from '@/components/dashboard/PeerBlockInfo'
-import TxInfo from '@/components/dashboard/TxInfo'
-import TxPieChart from '@/components/dashboard/TxPieChart'
+// import PeerBlockInfo from '@/components/dashboard/PeerBlockInfo'
+// import TxInfo from '@/components/dashboard/TxInfo'
+// import TxPieChart from '@/components/dashboard/TxPieChart'
 export default {
   name: 'Dashboard',
   components: {
-    'peer-block-info': PeerBlockInfo,
-    'tx-info': TxInfo,
-    'txPieChart': TxPieChart
   },
   data () {
     return {
@@ -128,7 +125,7 @@ export default {
           'Content-Type': 'application/json'
         }
       }).then(function (response) {
-        console.log(response)
+        // console.log(response)
         self.nodesCount = response.data.peers.length
         self.blocksCount = response.data.blkCount
         self.txCount = response.data.txCount

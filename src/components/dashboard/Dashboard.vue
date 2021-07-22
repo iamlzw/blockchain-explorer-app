@@ -112,7 +112,7 @@ export default {
     this.drawLine('hour_tab')
     this.drawPie()
     this.getData()
-    this.timer = setInterval(this.getData, 1000)
+    // this.timer = setInterval(this.getData, 1000)
   },
   methods: {
     getData () {

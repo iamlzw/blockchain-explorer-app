@@ -22,6 +22,7 @@ export default new Router({
     {
       path: '/',
       component: Main,
+      redirect: '/main/dashboard',
       children: [
         {
           path: '/main/dashboard',
@@ -31,11 +32,6 @@ export default new Router({
           path: '/main/network',
           name: 'network',
           component: Network
-        },
-        {
-          path: '/main/dashboard',
-          name: 'dashboard',
-          component: Dashboard
         },
         {
           path: '/main/transactions',

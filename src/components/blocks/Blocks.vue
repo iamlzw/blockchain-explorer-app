@@ -162,7 +162,7 @@ export default {
   },
   mounted () {
     this.getOrgList()
-    console.log(this.from)
+    // console.log(this.from)
   },
   // watch: {
   //   value2: function (val) {
@@ -185,14 +185,14 @@ export default {
       param.append('orgs', this.orgparam)
       param.append('current', this.currentPage)
       param.append('pageSize', this.pageSize)
-      console.log(param.toString())
+      // console.log(param.toString())
       // console.log(this.from)
       this.$axios({
         method: 'POST',
         url: this.$global.baseUrl + 'block/block',
         data: param
       }).then(function (response) {
-        console.log(response)
+        // console.log(response)
         self.tableData = response.data
         self.totalSize = response.data.length
       })
@@ -228,14 +228,14 @@ export default {
           'Content-Type': 'application/json'
         }
       }).then(function (response) {
-        console.log(response)
+        // console.log(response)
         self.OrgList = response.data
         // self.curChlHash = response.data.defaultchannel.ChannelGenesisHash
       })
     },
     getorgparam (data) {
       this.orgparam = data
-      console.log(this.orgparam)
+      // console.log(this.orgparam)
     }
   }
 }

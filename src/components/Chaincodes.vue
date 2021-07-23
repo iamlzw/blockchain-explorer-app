@@ -48,7 +48,7 @@ export default {
     getData () {
       const self = this
       let channelGenesisHash = this.$parent.channel
-      console.log(channelGenesisHash)
+      // console.log(channelGenesisHash)
       this.$axios({
         method: 'GET',
         url: this.$global.baseUrl + 'chaincode/info?channelGenesisHash=' + channelGenesisHash,
@@ -57,7 +57,7 @@ export default {
           'Content-Type': 'application/json'
         }
       }).then(function (response) {
-        console.log(response)
+        // console.log(response)
         self.chaincodes = response.data
       })
     }

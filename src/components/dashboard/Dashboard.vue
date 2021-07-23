@@ -43,17 +43,17 @@
           <el-col :span="12">
             <div class="bg-dark">
               <el-tabs type="border-card" v-model="activeName" class="tx-info" @tab-click="handleClick">
-                <el-tab-pane label="BLOCK/HOUR" name="hour_tab">
-                  <div id="hour_tab" style="width: 540px;height: 246px"></div>
+                <el-tab-pane label="BLOCKS/HOUR" name="block_hour">
+                  <div id="block_hour" style="width: 540px;height: 246px"></div>
                 </el-tab-pane>
-                <el-tab-pane label="BLOCK/MIN" name="min_tab" >
-                  <div id="min_tab" style="width:540px;height: 246px"></div>
+                <el-tab-pane label="BLOCKS/MIN" name="block_min" >
+                  <div id="block_min" style="width:540px;height: 246px"></div>
                 </el-tab-pane>
-                <el-tab-pane label="BLOCK/DAY" name="day_tab" >
-                  <div id="day_tab" style="width: 540px;height: 246px"></div>
+                <el-tab-pane label="TX/HOUR" name="tx_hour" >
+                  <div id="tx_hour" style="width: 540px;height: 246px"></div>
                 </el-tab-pane>
-                <el-tab-pane label="BLOCK/MONTH" name="month_tab">
-                  <div id="month_tab" style="width: 540px;height: 246px"></div>
+                <el-tab-pane label="TX/MIN" name="tx_min">
+                  <div id="tx_min" style="width: 540px;height: 246px"></div>
                 </el-tab-pane>
               </el-tabs>
             </div>
@@ -103,23 +103,38 @@ export default {
       txCount: 0,
       chaincodeCount: 0,
       timer: '',
-      activeName: 'hour_tab',
+      activeName: 'block_hour',
       peers: [],
-      blockInfo: []
+      blockInfo: [],
+      orgs: [],
+      orgtxcount: []
+      // orggroup: []
     }
   },
   mounted () {
-    this.drawLine('hour_tab')
-    this.drawPie()
-    this.getData()
-    // this.timer = setInterval(this.getData, 1000)
+    let hash = this.$parent.channel
+    this.getData(hash)
+    this.getPieData(hash)
+    this.getLineData('block_hour', hash)
+    // this.timer = setInterval(this.getData(hash), 1000)
+  },
+  props: ['channel'],
+  watch: {
+    channel: {
+      handler (newVal, oldVal) {
+        let self = this
+        self.getLineData('block_hour', newVal)
+      },
+      immediate: true
+    }
   },
   methods: {
-    getData () {
+    getData (hash) {
       const self = this
+      console.log(this.$global.baseUrl + 'base/infos?channelGenesisHash=' + hash)
       this.$axios({
         method: 'GET',
-        url: this.$global.baseUrl + 'base/infos',
+        url: this.$global.baseUrl + 'base/infos?channelGenesisHash=' + hash,
         headers: {
           'Accept': '*/*',
           'Content-Type': 'application/json'
@@ -134,66 +149,130 @@ export default {
         self.blockInfo = response.data.blkActivity
       })
     },
-    drawLine (eleid) {
-      let chart = this.$echarts.init(document.getElementById(eleid))
-      chart.setOption({
-        tooltip: {},
-        xAxis: {
-          data: ['201902', '201903', '201904', '201906', '201906', '201907']
-        },
-        yAxis: {},
-        series: [{
-          name: '销量',
-          type: 'line',
-          data: [5, 20, 36, 10, 10, 20]
-        }]
-      })
-    },
-    handleClick (tab, e) {
-      if (tab.name === 'hour_tab') {
-        this.drawLine('hour_tab')
-      } else if (tab.name === 'min_tab') {
-        this.drawLine('min_tab')
-      } else if (tab.name === 'day_tab') {
-        this.drawLine('day_tab')
-      } else {
-        this.drawLine('month_tab')
-      }
-    },
-    drawPie () {
+    getPieData (hash) {
       const self = this
-      let pieChart = self.$echarts.init(document.getElementById('pieChart'))
-      pieChart.setOption({
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a}</br>{b}:{c}({d}%)'
-        },
-        legend: {
-          orient: 'vertical',
-          x: 'left',
-          // data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
-          data: ['OrdererMSP', 'Org1MSP', 'Org2MSP']
-        },
-        series: [
-          {
-            name: '',
-            type: 'pie',
-            radius: ['50%', '70%'],
-            data: [
-              {value: 1048, name: 'OrdererMSP'},
-              {value: 735, name: 'Org1MSP'},
-              {value: 580, name: 'Org2MSP'}
-            ],
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
+      this.$axios({
+        method: 'GET',
+        url: this.$global.baseUrl + 'tx/group?channelGenesisHash=' + hash,
+        headers: {
+          'Accept': '*/*',
+          'Content-Type': 'application/json'
+        }
+      }).then(function (response) {
+        // console.log(response)
+        let txcountgroup = []
+        let orgs = []
+        let orgtxcount = []
+        for (let i = 0; i < response.data.length; i++) {
+          orgs.push(response.data[i].Name)
+          orgtxcount.push(response.data[i].Value)
+          let org = {value: response.data[i].Value, name: response.data[i].Name}
+          txcountgroup.push(org)
+        }
+        // console.log(txcountgroup)
+        // self.orggroup = response.data
+        // const self = this
+        let pieChart = self.$echarts.init(document.getElementById('pieChart'))
+        pieChart.setOption({
+          tooltip: {
+            trigger: 'item',
+            formatter: '{a}</br>{b}:{c}({d}%)'
+          },
+          legend: {
+            orient: 'vertical',
+            x: 'left',
+            // data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+            data: orgs
+          },
+          series: [
+            {
+              name: '',
+              type: 'pie',
+              radius: '50%',
+              // data: this.orggroup,
+              data: txcountgroup,
+              emphasis: {
+                itemStyle: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
               }
             }
-          }
-        ]
+          ]
+        })
+        // self.orggroup = response.data
       })
+    },
+    getLineData (eleid, hash) {
+      // eslint-disable-next-line no-unused-vars
+      let lineName = ''
+      const self = this
+      let str = ''
+      // param.append('channelGenesisHash', hash)
+      console.log(hash)
+      console.log(eleid)
+      if (eleid === 'block_hour') {
+        lineName = 'block/hour'
+        str = 'tx/line?channelGenesisHash=' + hash + '&queryType=block&timeType=hour'
+      } else if (eleid === 'block_min') {
+        str = 'tx/line?channelGenesisHash=' + hash + '&queryType=block&timeType=min'
+        lineName = 'block/min'
+      } else if (eleid === 'tx_hour') {
+        lineName = 'tx/hour'
+        str = 'tx/line?channelGenesisHash=' + hash + '&queryType=tx&timeType=hour'
+      } else {
+        lineName = 'tx/min'
+        str = 'tx/line?channelGenesisHash=' + hash + '&queryType=tx&timeType=min'
+      }
+      this.$axios({
+        method: 'GET',
+        url: this.$global.baseUrl + str,
+        headers: {
+          'Accept': '*/*',
+          'Content-Type': 'application/json'
+        }
+      }).then(function (response) {
+        console.log(response)
+        let xArgs = []
+        let yArgs = []
+        for (let i = 0; i < response.data.length; i++) {
+          xArgs.push(response.data[i].Time)
+          yArgs.push(response.data[i].TxCount)
+        }
+        console.log(xArgs)
+        console.log(yArgs)
+        let chart = self.$echarts.init(document.getElementById(eleid))
+        window.onresize = () => {
+          return (() => {
+            chart.resize()
+          })()
+        }
+        console.log(chart)
+        chart.setOption({
+          xAxis: {
+            data: xArgs
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [{
+            type: 'line',
+            data: yArgs
+          }]
+        })
+      })
+    },
+    handleClick (tab) {
+      if (tab.name === 'block_hour') {
+        this.getLineData('block_hour', this.$parent.channel)
+      } else if (tab.name === 'block_min') {
+        this.getLineData('block_min', this.$parent.channel)
+      } else if (tab.name === 'tx_hour') {
+        this.getLineData('tx_hour', this.$parent.channel)
+      } else {
+        this.getLineData('tx_min', this.$parent.channel)
+      }
     }
   }
 }

@@ -41,7 +41,7 @@
                         style="width: 100%"
                         :row-style="{height: '10'}"
                         :cell-style="{padding: '0'}"
-                        stripe="true"
+                        :stripe=true
                         :default-sort = "{prop: 'creator', order: ''}">
                     <el-table-column
                             prop="CreatorMspId"
@@ -134,7 +134,7 @@ export default {
       param.append('orgs', this.orgparam)
       param.append('current', this.currentPage)
       param.append('pageSize', this.pageSize)
-      console.log(param.toString())
+      // console.log(param.toString())
       this.$axios({
         method: 'POST',
         url: this.$global.baseUrl + 'tx/txlist',
@@ -182,7 +182,7 @@ export default {
     },
     getorgparam (data) {
       this.orgparam = data
-      console.log(this.orgparam)
+      // console.log(this.orgparam)
     }
   }
 }

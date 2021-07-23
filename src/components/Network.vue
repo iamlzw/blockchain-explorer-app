@@ -67,7 +67,7 @@ export default {
           'Content-Type': 'application/json'
         }
       }).then(function (response) {
-        console.log(response)
+        // console.log(response)
         self.peers = response.data
         // self.curChlHash = response.data.defaultchannel.ChannelGenesisHash
       })
@@ -89,7 +89,7 @@ export default {
   },
   watch: {
     channel: function (val) {
-      console.log(val)
+      // console.log(val)
       this.curChlHash = val
       this.getData(val)
     }

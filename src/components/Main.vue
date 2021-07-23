@@ -1,13 +1,13 @@
 <template>
     <div id="Main">
-        <el-menu :default-active="$route.path" router class="el-menu-demo" mode="horizontal" @select="handleSelect" @close="handleClose">
+        <el-menu :default-active="$route.path" router class="el-menu" mode="horizontal" @select="handleSelect" @close="handleClose">
           <el-menu-item v-for="(item,i) in navList" :key="i" :index="item.name">
               <template slot="title">
                   <i class="el-icon-s-platform"></i>
                   <span> {{ item.navItem }}</span>
               </template>
           </el-menu-item>
-          <el-select value-key="ChannelName" v-model="defaultchannel.ChannelName" placeholder="请选择" @change="onchange">
+          <el-select value-key="ChannelName" v-model="defaultchannel.ChannelName" placeholder="请选择" @change="onchange"  class="channel-select">
             <el-option
               v-for="item in channels"
               :key="item.ChannelName"
@@ -89,5 +89,13 @@ export default {
 </script>
 
 <style scoped>
+.channel-select{
+  margin-top: 10px;
+  margin-left: 20px;
+  /*float: right;*/
+}
 
+.el-menu{
+
+}
 </style>

@@ -116,7 +116,10 @@ export default {
     this.getData(hash)
     this.getPieData(hash)
     this.getLineData('block_hour', hash)
-    // this.timer = setInterval(this.getData(hash), 1000)
+    this.timer = setInterval(this.getData, 1000, hash)
+    this.timer = setInterval(this.getPieData, 1000, hash)
+    // let active = this.activeName
+    // this.timer = setInterval(this.getLineData, 1000, active, this.$parent.channel)
   },
   props: ['channel'],
   watch: {
@@ -211,7 +214,7 @@ export default {
       let str = ''
       // param.append('channelGenesisHash', hash)
       console.log(hash)
-      console.log(eleid)
+      // console.log(eleid)
       if (eleid === 'block_hour') {
         lineName = 'block/hour'
         str = 'tx/line?channelGenesisHash=' + hash + '&queryType=block&timeType=hour'
@@ -240,8 +243,8 @@ export default {
           xArgs.push(response.data[i].Time)
           yArgs.push(response.data[i].TxCount)
         }
-        console.log(xArgs)
-        console.log(yArgs)
+        // console.log(xArgs)
+        // console.log(yArgs)
         let chart = self.$echarts.init(document.getElementById(eleid))
         window.onresize = () => {
           return (() => {

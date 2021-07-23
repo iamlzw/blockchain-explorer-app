@@ -118,7 +118,7 @@
                             <el-popover trigger="hover" placement="top">
                                 <p>{{scope.row.TxHash}}</p>
                                 <div slot="reference" class="name-wrapper">
-                                    <span>{{scope.row.TxHash.substr(0,6)}}...</span>
+                                    <span>{{scope.row.TxHash.substr(1,)}}...</span>
                                 </div>
                             </el-popover>
                         </template>
